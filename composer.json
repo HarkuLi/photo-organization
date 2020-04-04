@@ -1,0 +1,20 @@
+{
+    "name": "harkuli/photo-organization",
+    "type": "project",
+    "description": "Organize photos.",
+    "authors": [
+        {
+            "name": "Harku Li",
+            "email": "mabinogiHarku@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "HarkuLi\\PhotoOrganization\\": "./app"
+        }
+    },
+    "require": {
+        "illuminate/container": "^7.3",
+        "illuminate/support": "^7.3"
+    }
+}
