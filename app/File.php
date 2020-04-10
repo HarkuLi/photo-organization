@@ -1,5 +1,5 @@
 <?php
-namespace HarkuLi\PhotoOrganization;
+namespace App;
 
 use Exception;
 use Illuminate\Support\Str;
