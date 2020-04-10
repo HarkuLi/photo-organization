@@ -1,18 +1,10 @@
 <?php
 namespace App;
 
+use Illuminate\Support\Facades\Config;
+
 class PhotoOrganization
 {
-    /**
-     * @var Settings
-     */
-    private $settings;
-
-    public function __construct(Settings $settings)
-    {
-        $this->settings = $settings;
-    }
-
     public function run(): void
     {
         $this->handlePhotos();
@@ -20,14 +12,14 @@ class PhotoOrganization
 
     private function handlePhotos(): void
     {
-        $fileList = scandir($this->settings->getSourceDirectory());
+        $fileList = scandir(Config::get('photo_organization.sourceDirectory'));
         array_walk($fileList, function (string $filename) {
             if (!$this->isPhotoFile($filename)) {
                 return;
             }
 
             $file = new File(
-                $this->settings->getSourceDirectory().DIRECTORY_SEPARATOR.$filename
+                Config::get('photo_organization.sourceDirectory').DIRECTORY_SEPARATOR.$filename
             );
             $file->copyTo($this->getDestinationPath($filename));
         });
@@ -43,7 +35,7 @@ class PhotoOrganization
         $nameTokens = explode('_', $filename);
         $date = $nameTokens[1];
         return implode(DIRECTORY_SEPARATOR, [
-            $this->settings->getDestinationDirectory(),
+            Config::get('photo_organization.destinationDirectory'),
             $date,
             $filename
         ]);
