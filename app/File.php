@@ -2,7 +2,6 @@
 namespace App;
 
 use Exception;
-use Illuminate\Support\Str;
 
 class File
 {
