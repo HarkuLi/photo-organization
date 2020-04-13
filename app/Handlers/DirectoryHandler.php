@@ -27,6 +27,20 @@ abstract class DirectoryHandler implements FileTypeHandlerInterface
     private $unhandledFiles = [];
 
     /**
+     * The function that should be called before handle.
+     *
+     * @var callable
+     */
+    private $beforeHandle;
+
+    /**
+     * The function that should be called after handle.
+     *
+     * @var callable
+     */
+    private $afterHandle;
+
+    /**
      * {@inheritDoc}
      *
      * Try all handlers of {@see self::$handlers} until one is matched for
@@ -37,16 +51,26 @@ abstract class DirectoryHandler implements FileTypeHandlerInterface
      */
     final public function handle(string $path): bool
     {
+        if ($this->beforeHandle) {
+            call_user_func($this->beforeHandle, $path);
+        }
+
         $this->unhandledFiles = [];
 
         $filenames = scandir($path);
-        return array_reduce($filenames, function ($result, $filename) use ($path) {
+        $result = array_reduce($filenames, function ($result, $filename) use ($path) {
             if ($filename === '.' || $filename === '..') {
                 return $result;
             }
 
             return $result && $this->handleFile($path.DIRECTORY_SEPARATOR.$filename);
         }, true);
+
+        if ($this->afterHandle) {
+            call_user_func($this->afterHandle, $path);
+        }
+
+        return $result;
     }
 
     /**
@@ -57,6 +81,30 @@ abstract class DirectoryHandler implements FileTypeHandlerInterface
     final public function getUnhandledFiles(): array
     {
         return array_keys($this->unhandledFiles);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Note that $callable will be set to each {@see self::$handlers} too.
+     * {@inheritDoc}
+     */
+    final public function setBeforeHandle(callable $callable): self
+    {
+        $this->beforeHandle = $callable;
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Note that $callable will be set to each {@see self::$handlers} too.
+     * {@inheritDoc}
+     */
+    final public function setAfterHandle(callable $callable): self
+    {
+        $this->afterHandle = $callable;
+        return $this;
     }
 
     /**
@@ -77,7 +125,14 @@ abstract class DirectoryHandler implements FileTypeHandlerInterface
                 continue;
             }
 
-            if  ($handler->handle($path)) {
+            if ($this->beforeHandle) {
+                $handler->setBeforeHandle($this->beforeHandle);
+            }
+            if ($this->afterHandle) {
+                $handler->setAfterHandle($this->afterHandle);
+            }
+
+            if ($handler->handle($path)) {
                 return true;
             }
 

@@ -15,6 +15,20 @@ abstract class FileHandler implements FileTypeHandlerInterface
      */
     private $fileFactory;
 
+    /**
+     * The function that should be called before handle.
+     *
+     * @var callable
+     */
+    private $beforeHandle;
+
+    /**
+     * The function that should be called after handle.
+     *
+     * @var callable
+     */
+    private $afterHandle;
+
     public function __construct(FileFactory $fileFactory)
     {
         $this->fileFactory = $fileFactory;
@@ -25,6 +39,10 @@ abstract class FileHandler implements FileTypeHandlerInterface
      */
     final public function handle(string $path): bool
     {
+        if ($this->beforeHandle) {
+            call_user_func($this->beforeHandle, $path);
+        }
+
         $date = $this->resolveCreatedDateTime($path)
             ->format(Config::get('photo_organization.dateFormat'));
 
@@ -36,7 +54,29 @@ abstract class FileHandler implements FileTypeHandlerInterface
                 $this->getNewFilename($path),
             ]));
 
+        if ($this->afterHandle) {
+            call_user_func($this->afterHandle, $path);
+        }
+
         return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    final public function setBeforeHandle(callable $callable): self
+    {
+        $this->beforeHandle = $callable;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    final public function setAfterHandle(callable $callable): self
+    {
+        $this->afterHandle = $callable;
+        return $this;
     }
 
     /**

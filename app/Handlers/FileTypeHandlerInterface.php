@@ -21,4 +21,30 @@ interface FileTypeHandlerInterface
      * @return bool
      */
     public function isType(string $path): bool;
+
+    /**
+     * Set a function that will be called before the handle.
+     *
+     * Example for $callable:
+     * function (string $path) {
+     *      // do something...
+     * }
+     *
+     * @param callable $callable
+     * @return self
+     */
+    public function setBeforeHandle(callable $callable): self;
+
+    /**
+     * Set a function that will be called after the handle.
+     *
+     * Example for $callable:
+     * function (string $path) {
+     *      // do something...
+     * }
+     *
+     * @param callable $callable
+     * @return self
+     */
+    public function setAfterHandle(callable $callable): self;
 }
