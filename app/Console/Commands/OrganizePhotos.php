@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Handlers\DeviceHandler;
 use App\Handlers\Pixel3\Pixel3Handler;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
@@ -46,10 +47,36 @@ class OrganizePhotos extends Command
     {
         $device = Config::get('photo_organization.device');
         // @todo add default handler
-        App::make(self::HANDLER_MAP[$device])
+        /**
+         * @var DeviceHandler
+         */
+        $handler = App::make(self::HANDLER_MAP[$device]);
+
+        // Initial max steps of progress bar is 1 that represents the device directory.
+        $bar = $this->output->createProgressBar(1);
+        $bar->setFormat(
+            ' %current%/%max% [%bar%] %percent:3s%%'
+            .PHP_EOL.' %message%'
+        );
+        $bar->start();
+
+        $handler->setBeforeHandle(function (string $path) use ($bar) {
+                $bar->setMessage("Processing $path ...");
+                $bar->display();
+
+                if (is_dir($path)) {
+                    // Subtract 2 because of '.' and '..' in the result of scandir().
+                    $bar->setMaxSteps($bar->getMaxSteps() + count(scandir($path)) - 2);
+                }
+            })
+            ->setAfterHandle(function () use ($bar) {
+                $bar->advance();
+            })
             ->handle(Config::get('photo_organization.sourceDirectory'));
 
+        $bar->setMessage("Finish.");
+        $bar->finish();
+
         // @todo unhandled file list
-        // @todo progress bar
     }
 }
