@@ -8,7 +8,7 @@ use DateTime;
  */
 class Exif
 {
-    private const KEY_FILE_DATE_TIME = 'FileDateTime';
+    private const KEY_DATE_TIME = 'DateTime';
 
     /**
      * Determine whether the file is EXIF.
@@ -29,6 +29,6 @@ class Exif
      */
     public function getCreatedDateTime(string $path): DateTime
     {
-        return new DateTime('@'.exif_read_data($path)[self::KEY_FILE_DATE_TIME]);
+        return new DateTime(exif_read_data($path)[self::KEY_DATE_TIME]);
     }
 }
