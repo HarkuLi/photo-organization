@@ -63,7 +63,7 @@ abstract class DirectoryHandler implements FileTypeHandlerInterface
                 return $result;
             }
 
-            return $result && $this->handleFile($path.DIRECTORY_SEPARATOR.$filename);
+            return $this->handleFile($path.DIRECTORY_SEPARATOR.$filename) && $result;
         }, true);
 
         if ($this->afterHandle) {
