@@ -3,6 +3,7 @@ namespace App\Handlers\Pixel3;
 
 use App\Handlers\DeviceHandler;
 use App\Handlers\ExifPhotoHandler;
+use App\Handlers\MultiMediaHandler;
 
 /**
  * Handle the directory that contains photos of Pixel3.
@@ -14,5 +15,6 @@ class Pixel3Handler extends DeviceHandler
      */
     protected $handlers = [
         ExifPhotoHandler::class,
+        MultiMediaHandler::class,
     ];
 }
