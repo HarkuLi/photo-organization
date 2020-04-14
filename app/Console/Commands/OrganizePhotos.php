@@ -60,7 +60,12 @@ class OrganizePhotos extends Command
         );
         $bar->start();
 
-        $handler->setBeforeHandle(function (string $path) use ($bar) {
+        $handledTotal = [
+            'directory' => 0,
+            'file' => 0,
+        ];
+
+        $isSuccess = $handler->setBeforeHandle(function (string $path) use ($bar) {
                 $bar->setMessage("Processing $path ...");
                 $bar->display();
 
@@ -69,14 +74,35 @@ class OrganizePhotos extends Command
                     $bar->setMaxSteps($bar->getMaxSteps() + count(scandir($path)) - 2);
                 }
             })
-            ->setAfterHandle(function () use ($bar) {
+            ->setAfterHandle(function (string $path) use ($bar, &$handledTotal) {
                 $bar->advance();
+
+                if (is_dir($path)) {
+                    $handledTotal['directory'] += 1;
+                } else {
+                    $handledTotal['file'] += 1;
+                }
             })
             ->handle(Config::get('photo_organization.sourceDirectory'));
 
-        $bar->setMessage("Finish.");
+        $bar->setMessage('Finish.');
         $bar->finish();
+        $this->line('');
 
-        // @todo unhandled file list
+        $this->line('');
+        $this->info($handledTotal['directory'].' directories and '.$handledTotal['file'].' files were processed.');
+
+        if ($isSuccess) {
+            $this->info('All files were processed successfully.');
+            return;
+        }
+
+        $unhandledList = $handler->getUnhandledFiles();
+        $this->line('');
+        $this->error(count($unhandledList).' files/directories can\'t be processed.');
+        $this->line('');
+        array_walk($unhandledList, function (string $path) {
+            $this->error($path);
+        });
     }
 }
