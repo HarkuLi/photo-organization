@@ -3,9 +3,11 @@
 namespace App\Console\Commands;
 
 use App\Handlers\DefaultDeviceHandler;
+use App\Handlers\DeviceHandler;
 use App\Handlers\DeviceHandlerFactory;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 class OrganizePhotos extends Command
 {
@@ -48,7 +50,51 @@ class OrganizePhotos extends Command
             $this->printUnsupportedDeviceWarning();
         }
 
+        $bar = $this->initProgressBar();
+
+        $isSuccess = $this->runHandler(
+            $handler,
+            $bar,
+            $handledDirectoryNum,
+            $handledFileNum
+        );
+
+        $this->finishProgressBar($bar);
+
+        $this->printProcessedNum($handledDirectoryNum, $handledFileNum);
+
+        if ($isSuccess) {
+            $this->printAllSuccess();
+            return;
+        }
+
+        $this->printUnprocessedList($handler->getUnhandledFiles());
+    }
+
+    private function printTitle(): void
+    {
+        $this->info('Begin to organize photos.');
+    }
+
+    private function printParameterInfo(): void
+    {
         $this->line('');
+        $this->info('Device: '.Config::get('photo_organization.device'));
+        $this->info('Source directory: '.Config::get('photo_organization.sourceDirectory'));
+        $this->info('Destination directory: '.Config::get('photo_organization.destinationDirectory'));
+    }
+
+    private function printUnsupportedDeviceWarning(): void
+    {
+        $this->line('');
+        $this->line('***** Warning: Your device might be not fully supported. *****');
+        $this->line(' - The process will be continued, but there might be some photos unprocessed.');
+    }
+
+    private function initProgressBar(): ProgressBar
+    {
+        $this->line('');
+
         // Initial max steps of progress bar is 1 that represents the device directory.
         $bar = $this->output->createProgressBar(1);
         $bar->setFormat(
@@ -57,6 +103,15 @@ class OrganizePhotos extends Command
         );
         $bar->start();
 
+        return $bar;
+    }
+
+    private function runHandler(
+        DeviceHandler $handler,
+        ProgressBar $bar,
+        &$handledDirectoryNum,
+        &$handledFileNum
+    ): bool {
         $handledTotal = [
             'directory' => 0,
             'file' => 0,
@@ -82,44 +137,38 @@ class OrganizePhotos extends Command
             })
             ->handle(Config::get('photo_organization.sourceDirectory'));
 
+        $handledDirectoryNum = $handledTotal['directory'];
+        $handledFileNum = $handledTotal['file'];
+
+        return $isSuccess;
+    }
+
+    private function finishProgressBar(ProgressBar $bar): void
+    {
         $bar->setMessage('Finish.');
         $bar->finish();
         $this->line('');
+    }
 
+    private function printProcessedNum(int $processedDirectoryNum, int $processedFileNum): void
+    {
         $this->line('');
-        $this->info($handledTotal['directory'].' directories and '.$handledTotal['file'].' files were processed.');
+        $this->info("$processedDirectoryNum directories and $processedFileNum files were processed.");
+    }
 
-        if ($isSuccess) {
-            $this->info('All files were processed successfully.');
-            return;
-        }
+    private function printAllSuccess(): void
+    {
+        $this->line('');
+        $this->info('All files were processed successfully.');
+    }
 
-        $unhandledList = $handler->getUnhandledFiles();
+    private function printUnprocessedList(array $unprocessedList): void
+    {
         $this->line('');
-        $this->error(count($unhandledList).' files/directories can\'t be processed.');
+        $this->error(count($unprocessedList).' files/directories can\'t be processed.');
         $this->line('');
-        array_walk($unhandledList, function (string $path) {
+        array_walk($unprocessedList, function (string $path) {
             $this->error($path);
         });
-    }
-
-    private function printTitle(): void
-    {
-        $this->info('Begin to organize photos.');
-    }
-
-    private function printParameterInfo(): void
-    {
-        $this->line('');
-        $this->info('Device: '.Config::get('photo_organization.device'));
-        $this->info('Source directory: '.Config::get('photo_organization.sourceDirectory'));
-        $this->info('Destination directory: '.Config::get('photo_organization.destinationDirectory'));
-    }
-
-    private function printUnsupportedDeviceWarning(): void
-    {
-        $this->line('');
-        $this->line('***** Warning: Your device might be not fully supported. *****');
-        $this->line(' - The process will be continued, but there might be some photos unprocessed.');
     }
 }
