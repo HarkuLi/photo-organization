@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Handlers\DeviceHandler;
+use App\Handlers\DeviceHandlerFactory;
 use App\Handlers\Pixel3\Pixel3Handler;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
@@ -10,10 +11,6 @@ use Illuminate\Support\Facades\Config;
 
 class OrganizePhotos extends Command
 {
-    private const HANDLER_MAP = [
-        'Pixel3' => Pixel3Handler::class,
-    ];
-
     /**
      * The name and signature of the console command.
      *
@@ -43,14 +40,9 @@ class OrganizePhotos extends Command
      *
      * @return mixed
      */
-    public function handle()
+    public function handle(DeviceHandlerFactory $deviceHandlerFactory)
     {
-        $device = Config::get('photo_organization.device');
-        // @todo add default handler
-        /**
-         * @var DeviceHandler
-         */
-        $handler = App::make(self::HANDLER_MAP[$device]);
+        $handler = $deviceHandlerFactory->getHandler();
 
         // Initial max steps of progress bar is 1 that represents the device directory.
         $bar = $this->output->createProgressBar(1);
