@@ -2,11 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Handlers\DeviceHandler;
+use App\Handlers\DefaultDeviceHandler;
 use App\Handlers\DeviceHandlerFactory;
-use App\Handlers\Pixel3\Pixel3Handler;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 
 class OrganizePhotos extends Command
@@ -42,8 +40,15 @@ class OrganizePhotos extends Command
      */
     public function handle(DeviceHandlerFactory $deviceHandlerFactory)
     {
-        $handler = $deviceHandlerFactory->getHandler();
+        $this->printTitle();
+        $this->printParameterInfo();
 
+        $handler = $deviceHandlerFactory->getHandler();
+        if ($handler instanceof DefaultDeviceHandler) {
+            $this->printUnsupportedDeviceWarning();
+        }
+
+        $this->line('');
         // Initial max steps of progress bar is 1 that represents the device directory.
         $bar = $this->output->createProgressBar(1);
         $bar->setFormat(
@@ -96,5 +101,25 @@ class OrganizePhotos extends Command
         array_walk($unhandledList, function (string $path) {
             $this->error($path);
         });
+    }
+
+    private function printTitle(): void
+    {
+        $this->info('Begin to organize photos.');
+    }
+
+    private function printParameterInfo(): void
+    {
+        $this->line('');
+        $this->info('Device: '.Config::get('photo_organization.device'));
+        $this->info('Source directory: '.Config::get('photo_organization.sourceDirectory'));
+        $this->info('Destination directory: '.Config::get('photo_organization.destinationDirectory'));
+    }
+
+    private function printUnsupportedDeviceWarning(): void
+    {
+        $this->line('');
+        $this->line('***** Warning: Your device might be not fully supported. *****');
+        $this->line(' - The process will be continued, but there might be some photos unprocessed.');
     }
 }
