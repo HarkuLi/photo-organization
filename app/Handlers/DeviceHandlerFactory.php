@@ -2,6 +2,7 @@
 namespace App\Handlers;
 
 use App\Handlers\Pixel3\Pixel3Handler;
+use App\Handlers\ZenFone5\ZenFone5Handler;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Config;
 
@@ -12,6 +13,7 @@ class DeviceHandlerFactory
 {
     private const HANDLER_MAP = [
         'Pixel3' => Pixel3Handler::class,
+        'ZenFone5' => ZenFone5Handler::class,
     ];
 
     /**

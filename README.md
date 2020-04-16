@@ -39,6 +39,11 @@ The process will create directory for each date and copy each file into correspo
 + Mp4 videos.
 + Portrait directories will be unfolded and files in it will be renamed as general photos. The filename of portrait photo will be suffixed with `_PORTRAIT`.
 
+### ZenFone5
+
++ Jpg photos.
++ Mp4 videos.
+
 ### default
 
 + EXIF files.
