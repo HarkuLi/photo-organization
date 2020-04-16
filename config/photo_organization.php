@@ -3,8 +3,8 @@
 
 return [
     'device' => 'Pixel3',
-    'sourceDirectory' => 'C:\Users\GameToGo\Desktop\src',
-    'destinationDirectory' => 'C:\Users\GameToGo\Desktop\dst',
+    'sourceDirectory' => '~/source',
+    'destinationDirectory' => '~/destination',
     // Date format of the result, see https://www.php.net/manual/en/function.date.php.
     'dateFormat' => 'Ymd',
 ];
