@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 use getID3;
@@ -23,7 +24,8 @@ class GetID3Wrapper
     /**
      * Get created timestamp of the file.
      *
-     * This function use the code of {@see https://developer.wordpress.org/reference/functions/wp_get_media_creation_timestamp}.
+     * This function use the code of
+     * {@see https://developer.wordpress.org/reference/functions/wp_get_media_creation_timestamp}.
      * And only mp4 extension has been tested.
      *
      * @param string $path Path of the file.

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Handlers;
 
 use App\FileFactory;
@@ -35,6 +36,6 @@ class MultiMediaHandler extends FileHandler
      */
     protected function resolveCreatedDateTime(string $path): DateTime
     {
-        return new DateTime('@'.$this->getID3Wrapper->getCreatedTimestamp($path));
+        return new DateTime('@' . $this->getID3Wrapper->getCreatedTimestamp($path));
     }
 }

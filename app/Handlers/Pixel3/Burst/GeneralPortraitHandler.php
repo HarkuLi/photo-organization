@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Handlers\Pixel3\Burst;
 
 use App\Handlers\ExifPhotoHandler;
@@ -22,6 +23,6 @@ class GeneralPortraitHandler extends ExifPhotoHandler
      */
     protected function getNewFilename(string $path): string
     {
-        return basename(dirname($path)).'.jpg';
+        return basename(dirname($path)) . '.jpg';
     }
 }

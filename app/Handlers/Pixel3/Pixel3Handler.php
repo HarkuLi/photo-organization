@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Handlers\Pixel3;
 
 use App\Handlers\DeviceHandler;

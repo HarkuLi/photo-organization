@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Handlers\ZenFone5;
 
 use App\Handlers\DeviceHandler;

@@ -79,9 +79,9 @@ class OrganizePhotos extends Command
     private function printParameterInfo(): void
     {
         $this->line('');
-        $this->info('Device: '.Config::get('photo_organization.device'));
-        $this->info('Source directory: '.Config::get('photo_organization.sourceDirectory'));
-        $this->info('Destination directory: '.Config::get('photo_organization.destinationDirectory'));
+        $this->info('Device: ' . Config::get('photo_organization.device'));
+        $this->info('Source directory: ' . Config::get('photo_organization.sourceDirectory'));
+        $this->info('Destination directory: ' . Config::get('photo_organization.destinationDirectory'));
     }
 
     private function printUnsupportedDeviceWarning(): void
@@ -99,7 +99,7 @@ class OrganizePhotos extends Command
         $bar = $this->output->createProgressBar(1);
         $bar->setFormat(
             ' %current%/%max% [%bar%] %percent:3s%%'
-            .PHP_EOL.' %message%'
+            . PHP_EOL . ' %message%'
         );
         $bar->start();
 
@@ -117,7 +117,8 @@ class OrganizePhotos extends Command
             'file' => 0,
         ];
 
-        $isSuccess = $handler->setBeforeHandle(function (string $path) use ($bar) {
+        $isSuccess = $handler
+            ->setBeforeHandle(function (string $path) use ($bar) {
                 $bar->setMessage("Processing $path ...");
                 $bar->display();
 
@@ -165,7 +166,7 @@ class OrganizePhotos extends Command
     private function printUnprocessedList(array $unprocessedList): void
     {
         $this->line('');
-        $this->error(count($unprocessedList).' files/directories can\'t be processed.');
+        $this->error(count($unprocessedList) . ' files/directories can\'t be processed.');
         $this->line('');
         array_walk($unprocessedList, function (string $path) {
             $this->error($path);

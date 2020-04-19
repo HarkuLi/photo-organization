@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Handlers;
 
 use Illuminate\Support\Facades\App;
@@ -63,7 +64,7 @@ abstract class DirectoryHandler implements FileTypeHandlerInterface
                 return $result;
             }
 
-            return $this->handleFile($path.DIRECTORY_SEPARATOR.$filename) && $result;
+            return $this->handleFile($path . DIRECTORY_SEPARATOR . $filename) && $result;
         }, true);
 
         if ($this->afterHandle) {
