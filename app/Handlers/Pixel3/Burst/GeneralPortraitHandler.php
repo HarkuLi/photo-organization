@@ -1,12 +1,12 @@
 <?php
-namespace App\Handlers\Pixel3\Portrait;
+namespace App\Handlers\Pixel3\Burst;
 
 use App\Handlers\ExifPhotoHandler;
 
 /**
- * Handle general photos in the portrait directory.
+ * Handle general portraits(without blurred background) in the burst directory.
  */
-class GeneralPhotoHandler extends ExifPhotoHandler
+class GeneralPortraitHandler extends ExifPhotoHandler
 {
     /**
      * @inheritDoc

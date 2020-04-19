@@ -1,10 +1,10 @@
 <?php
-namespace App\Handlers\Pixel3\Portrait;
+namespace App\Handlers\Pixel3\Burst;
 
 use App\Handlers\ExifPhotoHandler;
 
 /**
- * Handle portrait photos in the portrait directory.
+ * Handle portrait photos in the burst directory.
  */
 class PortraitHandler extends ExifPhotoHandler
 {

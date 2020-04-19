@@ -139,7 +139,7 @@ abstract class DirectoryHandler implements FileTypeHandlerInterface
             if ($handler instanceof DirectoryHandler) {
                 $this->unhandledFiles = array_merge(
                     $this->unhandledFiles,
-                    $handler->getUnhandledFiles()
+                    array_flip($handler->getUnhandledFiles())
                 );
             } else {
                 $this->unhandledFiles[$path] = null;

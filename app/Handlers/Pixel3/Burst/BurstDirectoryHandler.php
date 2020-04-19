@@ -1,19 +1,20 @@
 <?php
-namespace App\Handlers\Pixel3\Portrait;
+namespace App\Handlers\Pixel3\Burst;
 
 use App\Handlers\DirectoryHandler;
 
 /**
- * Handle directories that contains portrait photos.
+ * Handle directories that contains burst photos.
  */
-class PortraitDirectoryHandler extends DirectoryHandler
+class BurstDirectoryHandler extends DirectoryHandler
 {
     /**
      * @inheritDoc
      */
     protected $handlers = [
-        GeneralPhotoHandler::class,
+        GeneralPortraitHandler::class,
         PortraitHandler::class,
+        BurstPhotoHandler::class,
     ];
 
     /**

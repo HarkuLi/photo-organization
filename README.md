@@ -37,7 +37,7 @@ The process will create directory for each date and copy each file into correspo
 
 + General photos.
 + Mp4 videos.
-+ Portrait directories will be unfolded and files in it will be renamed as general photos. The filename of portrait photo will be suffixed with `_PORTRAIT`.
++ Burst directories will be unfolded and files in it will be renamed as general photos. The filename of portrait photo will be suffixed with `_PORTRAIT`.
 
 ### ZenFone5
 
