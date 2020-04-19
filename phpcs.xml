@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ruleset>
+    <!-- display progress and sniff codes -->
+    <arg value="p"/>
+    <arg value="s"/>
+
+    <!-- use colors in output -->
+    <arg name="colors"/>
+
+    <!-- rules -->
+    <rule ref="PSR1"/>
+    <rule ref="PSR12">
+        <exclude-pattern>app/Console/Kernel.php</exclude-pattern>
+        <exclude-pattern>app/Http/Controllers/Controller.php</exclude-pattern>
+    </rule>
+
+    <!-- paths and files to check -->
+    <file>app</file>
+</ruleset>
