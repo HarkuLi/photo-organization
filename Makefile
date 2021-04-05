@@ -1,9 +1,11 @@
-.PHONY: build
-build: .env
-	composer install --no-dev
-	if grep -q "^APP_KEY=$$" .env; then \
-		php artisan key:generate; \
-	fi
-
-.env:
+.env: .env.example
 	cp .env.example $@
+
+.PHONY: run
+run:
+	docker-compose up --build
+
+.PHONY: run-dev
+run-dev:
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
+	docker-compose exec cmd /bin/sh

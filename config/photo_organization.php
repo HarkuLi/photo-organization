@@ -2,9 +2,8 @@
 // config file for App\Console\Commands\OrganizePhotos
 
 return [
-    'device' => 'Pixel3',
-    'sourceDirectory' => '~/source',
-    'destinationDirectory' => '~/destination',
-    // Date format of the result, see https://www.php.net/manual/en/function.date.php.
-    'dateFormat' => 'Ymd',
+    'device' => config('DEVICE', 'Pixel3'),
+    'sourceDirectory' => base_path() . '/source',
+    'destinationDirectory' => base_path() . '/destination',
+    'dateFormat' => config('DATE_FORMAT', 'Ymd'),
 ];

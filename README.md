@@ -6,29 +6,31 @@ The process will create directory for each date and copy each file into correspo
 
 ## Prerequisite
 
-1. [PHP][] 7.2.5 and later
-2. [Composer][]
+1. [GNU Make][]
+2. [Docker][]
+3. [Docker Compose][]
 
-[Composer]: https://getcomposer.org/download
-[PHP]: https://www.php.net/downloads
+[GNU Make]: https://www.gnu.org/software/make/
+[Docker]: https://www.docker.com/
+[Docker Compose]: https://docs.docker.com/compose/install/
 
 ## Get Started
 
-1. Build the project.
+1. Create `.env` file.
 
     ```
-    make build
+    make .env
     ```
 
-2. Set the config file `config/photo_organization`.
+2. Set options in `.env` file.
 
-    + device: The device/app used to take photos. See [Supported Devices](#Supported-Devices) for available values.
-    + See the config file for detailed options.
+    + DEVICE: The device/app used to take photos. See [Supported Devices](#Supported-Devices) for available values.
+    + See [.env.example](./.env.example) for detailed options.
 
-3. Run the command.
+3. Run the application.
 
     ```
-    php artisan photo:organize
+    make run
     ```
 
 ## Supported Devices

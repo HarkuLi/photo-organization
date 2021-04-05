@@ -1,0 +1,13 @@
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Git
+.git
+
+# Build
+vendor
+
+# Document
+*.md
