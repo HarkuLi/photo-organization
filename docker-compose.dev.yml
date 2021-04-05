@@ -1,0 +1,10 @@
+version: "3"
+services:
+  cmd:
+    volumes:
+      - ./source:/app/source
+      - ./destination:/app/destination
+    command:
+      - tail
+      - -f
+      - /dev/null
