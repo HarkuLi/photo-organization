@@ -1,7 +1,7 @@
 FROM composer:2.0 AS builder
 
 COPY . .
-RUN composer install --ignore-platform-reqs
+RUN composer install --ignore-platform-reqs --no-cache
 
 FROM php:8.0-alpine
 
