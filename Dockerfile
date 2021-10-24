@@ -1,7 +1,7 @@
 FROM composer:2.0 AS builder
 
 COPY . .
-RUN composer install --no-cache
+RUN composer install --no-dev --no-cache
 FROM php:8.0-alpine
 
 RUN mkdir /app
