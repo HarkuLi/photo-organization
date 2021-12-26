@@ -4,6 +4,7 @@ namespace App\Handlers;
 
 use App\FileFactory;
 use DateTime;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Config;
 
 /**
@@ -44,14 +45,11 @@ abstract class FileHandler implements FileTypeHandlerInterface
             call_user_func($this->beforeHandle, $path);
         }
 
-        $date = $this->resolveCreatedDateTime($path)
-            ->format(Config::get('photo_organization.dateFormat'));
-
         $this->fileFactory
             ->create($path)
             ->copyTo(implode(DIRECTORY_SEPARATOR, [
                 Config::get('photo_organization.destinationDirectory'),
-                $date,
+                $this->resolveDirName($path),
                 $this->getNewFilename($path),
             ]));
 
@@ -60,6 +58,15 @@ abstract class FileHandler implements FileTypeHandlerInterface
         }
 
         return true;
+    }
+
+    private function resolveDirName(string $path): string
+    {
+        $createdAt = new Carbon($this->resolveCreatedDateTime($path));
+        $format = Config::get('photo_organization.dateFormat');
+        $start = $createdAt->startOfWeek(Carbon::MONDAY)->format($format);
+        $end = $createdAt->endOfWeek(Carbon::SUNDAY)->format($format);
+        return "$start-$end";
     }
 
     /**
