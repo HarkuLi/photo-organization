@@ -59,6 +59,8 @@ class GetID3Wrapper
             case 'mp4':
                 if (isset($metadata['quicktime']['moov']['subatoms']['0']['creation_time_unix'])) {
                     return (int) $metadata['quicktime']['moov']['subatoms']['0']['creation_time_unix'];
+                } elseif (isset($metadata['quicktime']['timestamps_unix']['create']['moov mvhd'])) {
+                    return (int) $metadata['quicktime']['timestamps_unix']['create']['moov mvhd'];
                 }
                 break;
         }
